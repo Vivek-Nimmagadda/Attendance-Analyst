@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block head %}
+    <title>EditProfile</title>
+    {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'attendance/css/signin.css' %}">
+{% endblock %}
+
+{% block body %}
+    {%  load crispy_forms_tags %}
+    <div class="container">
+        {% crispy form %}
+    </div>
+
+    <div class="form-signin">
+        <h4>Note</h4>
+        <ul>
+            <li>Please enter your LMS username and password</li>
+            <li>Your login details are safe</li>
+            <li>All passwords are encrypted with AES and cannot be read even by the admins</li>
+        </ul>
+    </div>
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends 'attendance/../base.html' %}
+
+{% block head %}
+    <title>Attendance Analyst</title>
+    {% load staticfiles %}
+{% endblock %}
+
+
+{% block body %}
+    <div class="jumbotron vertical-center parallax-window" data-parallax="scroll"
+                data-image-src="{% static 'attendance/css/jumbotro.png' %}" id="main-jumbo">
+      <div class="container text-center">
+          <h1>Attendance Analyst</h1>
+        <p>Easy.Comprehensive.Analytic</p>
+        <p>Signup and get easy access to attendance records.<br/> Calculate number of classes need to prevent grade drops and loss of scholarship.</p>
+        <p><button class="btn btn-danger" href="#students-list" role="button" id="about-btn">Go &raquo;</button></p>
+      </div>
+    </div>
+
+    <div class="container " id="students-list">
+        <h2>Registered Students</h2>
+        <div class="row userList">
+
+            {% for student in studentList %}
+            <div class="col-esm-12 col-sm-6 col-md-4 col-lg-3">
+                <img class="img-circle" src="http://iv1.lisimg.com/image/8801241/600full-damien-rice.jpg" alt="Generic placeholder image" width="140" height="140">
+                <h2>{{ student.name }}</h2>
+                <p>
+                    {{ student.lmsId }}
+                    <br/>
+                    <small>
+                        Last sync:
+                            {% if student.last_updated == null %}
+                                never
+                            {% else %}
+                                {{ student.last_updated|timesince:currentTime}} ago
+                            {% endif %}
+                    </small>
+                </p>
+                <p><a class="btn btn-link" href="{% url 'records' student.lmsId 4 %}" role="button">View details »</a></p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="{% static 'attendance/js/parallax.min.js' %}"></script>
+    <script src="{% static 'attendance/js/jquery.easing.js' %}"></script>
+    <script src="{% static 'attendance/js/index.js' %}"></script>
+{% endblock %}
