@@ -9,7 +9,7 @@ class Student(models.Model):
     name = models.CharField(max_length=50)
     lmsId = models.CharField(max_length=50)
     password = models.CharField(max_length=50)
-    last_updated = models.DateTimeField(blank=True, default=timezone.now())
+    last_updated = models.DateTimeField(blank=True, default=timezone.now)
     scholarship = models.BooleanField(default=True)
 
     def __str__(self):

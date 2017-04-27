@@ -7,3 +7,7 @@ body {
   text-emphasis-color: black;
   margin-bottom: 0px;
 }
+
+.fillspace {
+  min-height: 50px;
+}
