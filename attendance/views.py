@@ -13,17 +13,20 @@ from .forms import RegisterForm, EditProfile
 
 
 def index(request):
-    student_list = Student.objects.all()
+    student_list = Student.objects.all().order_by('last_updated').reverse()
     time_now = timezone.now()
     return render(request, 'attendance/index.html', {'studentList': student_list, 'currentTime': time_now})
 
 
 def register(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         print request.POST
         if form.is_valid():
-            new_student = Student(name=form.cleaned_data['user_name'], lmsId=form.cleaned_data['lms_id'], password=encode(form.cleaned_data['password'],))
+            new_student = Student(name=form.cleaned_data['user_name'], lmsId=form.cleaned_data['lms_id'],
+                                  password=encode(form.cleaned_data['password']))
+            new_student.display_image = form.cleaned_data['profile_picture']
+
             new_student.save()
 
             return HttpResponse(new_student.name + "'s Registration Success!")

@@ -11,6 +11,7 @@ class Student(models.Model):
     password = models.CharField(max_length=50)
     last_updated = models.DateTimeField(blank=True, default=timezone.now)
     scholarship = models.BooleanField(default=True)
+    display_image = models.ImageField(upload_to='profiles/', default='profiles/default_pic.png')
 
     def __str__(self):
         return self.name + ", " + self.lmsId

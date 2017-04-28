@@ -124,5 +124,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = '/static-cdn/'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/media/'
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'AttendanceAnalyst/media')
 CRISPY_TEMPLATE_PACK = 'bootstrap3'

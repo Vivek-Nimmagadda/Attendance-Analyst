@@ -14,7 +14,8 @@
 
             {% for student in studentList %}
             <div class="col-esm-12 col-sm-6 col-md-4 col-lg-3">
-                <img class="img-circle" src="http://iv1.lisimg.com/image/8801241/600full-damien-rice.jpg" alt="Generic placeholder image" width="140" height="140">
+                <a class ="normal-anchor" href="{% url 'records' student.lmsId 4 %}#focus">
+                <img class="img-circle" src="{{ student.display_image.url }}" alt="Generic placeholder image" width="140" height="140">
                 <h2>{{ student.name }}</h2>
                 <p>
                     {{ student.lmsId }}
@@ -29,10 +30,9 @@
                     </small>
                 </p>
                 <p><a class="btn btn-link" href="{% url 'records' student.lmsId 4 %}#focus" role="button">View details »</a></p>
+            </a>
             </div>
             {% endfor %}
         </div>
     </div>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 {% endblock %}
