@@ -203,7 +203,7 @@ def update_records(request, lms_id):
             status = 'Logout Failed!'
             print status
         print '-' * 103
-        return redirect('/attendance/' + student.lmsId + "/" + str(4))
+        return redirect('/attendance/' + student.lmsId + "/" + str(4) + "/#focus")
     return HttpResponse("Failure!")
 
 

@@ -1,11 +1,12 @@
 body {
-    padding-top: 50px;
+
     min-height: 2000px;
 }
 
 .navbar-fixed-top {
     text-emphasis-color: black;
     margin-bottom: 0px;
+    /*background: transparent;*/
 }
 
 .fillspace {
