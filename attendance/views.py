@@ -8,6 +8,7 @@ from django.utils import timezone
 import lxml.html
 import requests
 from .forms import RegisterForm, EditProfile
+import json
 
 # Create your views here.
 
@@ -82,6 +83,7 @@ def update_records(request, lms_id):
         else:
             status = 'Could Not Login! Check Details!'
             print status
+            return render(request, "attendance/error.html", {})
 
         # Searching for attendance link
         res_html = lxml.html.fromstring(response.content)
@@ -203,24 +205,24 @@ def update_records(request, lms_id):
             status = 'Logout Failed!'
             print status
         print '-' * 103
-        return redirect('/attendance/' + student.lmsId + "/" + str(4) + "/#focus")
+        return redirect('/attendance/' + student.lmsId + "/" + "4" + "/#focus")
     return HttpResponse("Failure!")
 
 
 def get_records(request, lms_id, sem):
-    query = Attendance.objects.filter(student__lmsId=lms_id, subject__sem=int(sem))
+    attendance_query = Attendance.objects.filter(student__lmsId=lms_id, subject__sem=int(sem))
 
     table_list = []
-    for record in query:
-        if record.total_class != 0:
-            perc = 100 - (float(record.absent_class)) / float(record.total_class) * 100
+    percet_list = []
+    sub_list = []
+    list_80 = []
+    list_75 = []
+    for attendance_record in attendance_query:
+        if attendance_record.total_class != 0:
+            perc = 100 - (float(attendance_record.absent_class)) / float(attendance_record.total_class) * 100
         else:
             perc = -1
 
-        comment = ''
-        classes80 = -1
-        classes75 = -1
-        comment = ""
         if perc >= 80:
             classes75 = "SET"
             classes80 = "SET"
@@ -231,7 +233,7 @@ def get_records(request, lms_id, sem):
             classes80 = "SET"
             comment = "SET"
         elif perc >= 75:
-            classes80 = int(record.absent_class) * 5 - int(record.total_class)
+            classes80 = int(attendance_record.absent_class) * 5 - int(attendance_record.total_class)
             comment = "uh?"
             if classes80 >= 0 :
                 classes80 = classes80
@@ -239,8 +241,8 @@ def get_records(request, lms_id, sem):
                 classes80 = "SET!"
             classes75 = "SET!"
         else:
-            classes80 = int(record.absent_class) * 5 - int(record.total_class)
-            classes75 = int(record.absent_class) * 4 - int(record.total_class)
+            classes80 = int(attendance_record.absent_class) * 5 - int(attendance_record.total_class)
+            classes75 = int(attendance_record.absent_class) * 4 - int(attendance_record.total_class)
             comment = "Dhadel!"
             if classes80 >= 0:
                 classes80 = classes80
@@ -250,13 +252,42 @@ def get_records(request, lms_id, sem):
                 classes75 = classes75
             else:
                 classes80 = "SET!"
-        table_list_item = {'name': record.subject.name, 'total': record.total_class, 'present': record.present_class,
-                           'absent': record.absent_class, 'perc': perc, 'comment': comment, 'for80': classes80, 'for75': classes75}
+        table_list_item = {'name': attendance_record.subject.name, 'total': attendance_record.total_class, 'present': attendance_record.present_class,
+                           'absent': attendance_record.absent_class, 'perc': perc, 'comment': comment, 'for80': classes80, 'for75': classes75}
         table_list.append(table_list_item)
+        perc = "%.2f" % perc
+        percet_list.append(perc)
+        sub_list.append(attendance_record.subject.name)
+        if type(classes80) == int:
+            list_80.append(classes80)
+        else:
+            list_80.append(0)
+        if type(classes75) == int:
+            list_75.append(classes75)
+        else:
+            list_75.append(0)
 
-    student_name = Student.objects.get(lmsId=lms_id)
+    student_retrieved = Student.objects.get(lmsId=lms_id)
+    sem_list = list_of_sems(student_retrieved)
+    sub_list = json.dumps(sub_list)
+    context = {'student_retrieved': student_retrieved, 'table_list': table_list,
+               'currentTime': timezone.now(), 'semList': sem_list, 'cur_sem': int(sem),
+               'percList': percet_list, 'subList': sub_list, 'list80': list_80, 'list75': list_75}
 
-    context = {'student_name': student_name, 'table_list': table_list, 'currentTime': timezone.now()}
-
+    # print percet_list
     return render(request, 'attendance/result.html', context)
+
+
+def list_of_sems(student):
+    sem_query = Attendance.objects.filter(student_id=student.id)
+    sem_list = []
+
+    for attendance in sem_query:
+        if attendance.subject.sem in sem_list:
+            continue
+        else:
+            sem_list.append(attendance.subject.sem)
+
+    sem_list.sort()
+    return sem_list
 

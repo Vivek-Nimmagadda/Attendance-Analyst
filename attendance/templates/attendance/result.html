@@ -2,94 +2,162 @@
 {% load humanize %}
 
 {% block head %}
-    <title>{{ student_name.name }}'s Records</title>
+    <title>{{ student_retrieved.name }}'s Records</title>
+    <style>
+        .display {
+            align-items: center;
+            text-align: center;
+            display: flex;
+            margin-right: 20px;
+            margin-top: 110px;
+        }
+
+    </style>
         {% load staticfiles %}
 {% endblock %}
 
 
 {% block body %}
-    <div class="container">
-	<div class="col-sm-2"></div>
-	<div class="col-sm-8" bgcolor="#ffffff" id="focus">
-        <div class="fillspace">
+    <div class="container-flex">
+        <div class="col-sm-3 col-xs-12">
+            <div class="display col-centered pull-right">
+            <a class ="normal-anchor2" href="{% url 'records' student_retrieved.lmsId 4 %}#focus">
+            <img class="img-circle" src="{{ student_retrieved.display_image.url }}" alt="Generic placeholder image" width="140" height="140">
+            <h2>{{ student_retrieved.name }}</h2>
+            <p>
+                {{ student_retrieved.lmsId }}
+                <br/>
+                <small>
+                    Last sync:
+                        {% if student_retrieved.last_updated == null %}
+                            never
+                        {% else %}
+                            {{ student_retrieved.last_updated|timesince:currentTime}} ago
+                        {% endif %}
+                </small>
+            </p>
+            <form class='center-block' action="{% url 'update' student_retrieved.lmsId %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" class="btn" value="Update!">
+                    </form>
+            </a>
+        </div>
+        </div>
+        <div class="col-sm-6" bgcolor="#ffffff" id="focus">
+            <div class="fillspace">
 
-        </div>
-		<h1>{{ student_name.name }} Records:</h1>
-        <div class="btn-group pull-right" role="group" aria-label="...">
-          <button type="button" class="btn btn-default" id="75-btn">75%</button>
-          <button type="button" class="btn btn-default" id="80-btn">80%</button>
-        </div>
-        <div></div>
-        <div id="div-75">
-        <table class="table table-striped table-hover" id="table-75">
+            </div>
+            <h2>Attendance:</h2>
+
+                <h6>Sem : </h6>
+            <div class="btn-group pull-left" role="gorup" aria-label="...">
+                {% for sem in semList %}
+                    {% if sem > 0 %}
+                        {% if cur_sem == sem %}
+                        <button class="btn active" onclick="location.href='{% url 'records' student_retrieved.lmsId sem %}#focus'" >{{ sem }}</button>
+                        {% else %}
+                        <button class="btn" onclick="location.href='{% url 'records' student_retrieved.lmsId sem %}#focus'" >{{ sem }}</button>
+                        {% endif %}
+
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <div class="btn-group pull-right" role="group" aria-label="...">
+              <button type="button" class="btn" id="75-btn">75%</button>
+              <button type="button" class="btn active" id="80-btn">80%</button>
+            </div>
+            <div></div>
+            <div id="div-75">
+            <table class="table table-striped table-hover" id="table-75">
+                    <thead class="table-head">
+                    <tr>
+                        <th>Subject</th>
+                        <div class="test">
+                        <th class="text-center">Total</th>
+                        <th class="text-center">Present</th>
+                        <th class="text-center">Absent</th>
+                        <th class="text-center">%</th>
+                        <th class="text-center">For75</th>
+                        </div>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for tableEntry in table_list %}
+                        <tr>
+                            <td>{{ tableEntry.name }}</td>
+                            <div class="test">
+                            <td class="text-center">{{ tableEntry.total }}</td>
+                            <td class="text-center">{{ tableEntry.present }}</td>
+                            <td class="text-center">{{ tableEntry.absent }}</td>
+                            <td class="text-center">{{ tableEntry.perc | floatformat:2}}</td>
+                            <td class="text-center">{{ tableEntry.for75 }}</td>
+                            <div class="test">
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div></div>
+            <div id="div-80">
+            <table class="table table-striped table-hover" id="table-80">
                 <thead class="table-head">
                 <tr>
                     <th>Subject</th>
-                    <div class="test">
                     <th class="text-center">Total</th>
                     <th class="text-center">Present</th>
                     <th class="text-center">Absent</th>
                     <th class="text-center">%</th>
-                    <th class="text-center">For75</th>
-                    </div>
+                    <th class="text-center">For80</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for tableEntry in table_list %}
                     <tr>
                         <td>{{ tableEntry.name }}</td>
-                        <div class="test">
                         <td class="text-center">{{ tableEntry.total }}</td>
                         <td class="text-center">{{ tableEntry.present }}</td>
                         <td class="text-center">{{ tableEntry.absent }}</td>
                         <td class="text-center">{{ tableEntry.perc | floatformat:2}}</td>
-                        <td class="text-center">{{ tableEntry.for75 }}</td>
-                        <div class="test">
+                        <td class="text-center">{{ tableEntry.for80 }}</td>
                     </tr>
                 {% endfor %}
                 </tbody>
             </table>
-        </div>
-        <div></div>
-        <div id="div-80">
-        <table class="table table-striped table-hover" id="table-80">
-            <thead class="table-head">
-            <tr>
-                <th>Subject</th>
-                <th class="text-center">Total</th>
-                <th class="text-center">Present</th>
-                <th class="text-center">Absent</th>
-                <th class="text-center">%</th>
-                <th class="text-center">For80</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for tableEntry in table_list %}
-                <tr>
-                    <td>{{ tableEntry.name }}</td>
-                    <td class="text-center">{{ tableEntry.total }}</td>
-                    <td class="text-center">{{ tableEntry.present }}</td>
-                    <td class="text-center">{{ tableEntry.absent }}</td>
-                    <td class="text-center">{{ tableEntry.perc | floatformat:2}}</td>
-                    <td class="text-center">{{ tableEntry.for80 }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-        </div>
-    <div class="row pull-right">
-                <p>
-                Last updated : {{ student_name.last_updated|date:"DATE_FORMAT" }} {{ student_name.last_updated|date:"TIME_FORMAT" }}
-                <form class='pull-right' action="{% url 'update' student_name.lmsId %}" method="post">
-                    {% csrf_token %}
-                    <input type="submit" class="btn" value="Update!">
-                </form>
             </div>
-	</div>
-	<div class="col-sm-2">
-    </div>
-</div>
 
+            <div class="row">
+
+                <div class="col-md-4" id="graphAtd">
+                    <canvas style="margin-top: 30px" id="attendance" height="300" width="300"></canvas>
+                    <h5 style="text-align: center">Attendnace</h5>
+                </div>
+
+                <div class="col-md-4" id="graph80">
+                    <canvas style="margin-top: 30px" id="requiredClasses"></canvas>
+                    <h5 style="text-align: center">For 80%</h5>
+                </div>
+                <div class="col-md-4 " id="graph75">
+                    <canvas style="margin-top: 30px" id="requiredClasses2"></canvas>
+                    <h5 style="text-align: center">For 75%</h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3 col-xs-12" >
+            <h2 class="" style="margin-top: 350px; margin-left: 30px">Avg = 80%</h2>
+        </div>
+
+    </div>
+
+    <script>
+        var testdata = {{percList|safe}};
+        var labels_sem_list = {{ subList|safe}};
+        var list80 = {{ list80|safe }};
+        var list75 = {{ list75|safe }};
+    </script>
+
+    <script src="{% static 'attendance/js/Chart.bundle.js' %}"></script>
     <script src="{% static 'attendance/js/result.js' %}"></script>
 
 {% endblock %}
