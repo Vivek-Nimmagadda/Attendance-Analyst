@@ -1,6 +1,8 @@
 $(function () {
    $("#table-75").hide();
 
+   $("#average").html("Avg : " + avgPerc().toFixed(2) +"%");
+
    addExtrasToList();
 
    drawgraph1();
@@ -22,7 +24,16 @@ $(function () {
    }
 });
 
-
+var avgPerc = function () {
+    var avg = 0;
+    var i;
+    for(i =0 ; i < testdata.length ; i++) {
+        avg += parseFloat(testdata[i]);
+        console.log("Adding to avg " + testdata[i]);
+    }
+    console.log("Dividing " + avg + " with " + testdata.length);
+    return parseFloat(avg)/parseFloat((testdata.length));
+};
 
 
 var addExtrasToList = function() {
@@ -54,9 +65,7 @@ var isEmpty = function(list){
 
   for(i = 0; i < list.length; i++){
       if(list[i] === 0) {
-          console.log(list[i]);
       }else{
-          console.log(list[i]);
           result = false;
           return result;
       }
@@ -80,7 +89,7 @@ $("#80-btn").bind('click', function (event) {
 
 var drawgraph1 = function() {
 
-    console.log(testdata);
+
     var ctx = $("#attendance");
     var myChart = new Chart(ctx, {
     type: 'bar',

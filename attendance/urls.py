@@ -10,5 +10,4 @@ urlpatterns = [
     url(r'^(?P<lms_id>[A-Za-z0-9.]+)/update$', views.update_records, name="update"),
     url(r'^(?P<lms_id>[A-Za-z0-9.]+)/edit$', views.edit, name="edit"),
     url(r'^(?P<lms_id>[A-Za-z0-9.]+)/(?P<sem>[0-9]+)/$', views.get_records, name="records"),
-
 ]

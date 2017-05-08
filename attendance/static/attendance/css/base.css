@@ -3,6 +3,30 @@ body {
     min-height: 2000px;
 }
 
+.change{
+	-ms-transform: rotate(360deg) scale(1.1); /* IE 9 */
+    -webkit-transform: rotate(360deg) scale(1.1); /* Chrome, Safari, Opera */
+    transform: rotate(360deg) scale(1.1);
+
+    transition-duration: .5s;
+}
+
+.image img {
+    -webkit-transition: all .2s ease-in-out; /* Safari and Chrome */
+    -moz-transition: all .2s ease-in-out; /* Firefox */
+    -ms-transition: all .2s ease-in-out; /* IE 9 */
+    -o-transition: all .2s ease-in-out; /* Opera */
+    transition: all .2s ease-in-out;
+}
+
+.image:hover img {
+    -webkit-transform:scale(1.07); /* Safari and Chrome */
+    -moz-transform:scale(1.07); /* Firefox */
+    -ms-transform:scale(1.07); /* IE 9 */
+    -o-transform:scale(1.07); /* Opera */
+     transform:scale(1.07);
+}
+
 .navbar-fixed-top {
     text-emphasis-color: black;
     margin-bottom: 0px;
@@ -19,6 +43,12 @@ body {
     text-decoration: none;
     text-emphasis: none;
 
+    -webkit-transition: background-color .2s ease-in; /* Safari and Chrome */
+    -moz-transition: background-color .2s ease-in; /* Firefox */
+    -ms-transition: background-color .2s ease-in; /* IE 2 */
+    -o-transition: background-color .2s ease-in; /* Opera */
+    transition: background-color .2s ease-in;
+
 }
 
 .normal-anchor:visited {
@@ -27,7 +57,7 @@ body {
 }
 
 .normal-anchor:hover {
-    background-color: #eeeeee;
+    background-color: #f1f1f1;
     text-decoration: none;
 }
 

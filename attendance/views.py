@@ -290,4 +290,3 @@ def list_of_sems(student):
 
     sem_list.sort()
     return sem_list
-

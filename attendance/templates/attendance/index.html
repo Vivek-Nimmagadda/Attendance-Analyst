@@ -13,7 +13,7 @@
         <div class="row userList">
 
             {% for student in studentList %}
-            <div class="col-esm-12 col-sm-6 col-md-4 col-lg-3 normal-anchor" >
+            <div class="col-esm-12 col-sm-6 col-md-4 col-lg-3 normal-anchor image" >
                 <a class ="normal-anchor" href="{% url 'records' student.lmsId 4 %}#focus">
                 <img class="img-circle" src="{{ student.display_image.url }}" alt="Generic placeholder image" width="140" height="140">
                 <h2>{{ student.name }}</h2>

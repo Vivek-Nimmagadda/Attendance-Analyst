@@ -8,3 +8,12 @@ $(function() {
 		event.preventDefault();
 	});
 });
+
+
+$("#about-btn").mouseover(function(){
+	$(this).addClass("change").delay(500);
+});
+
+$("#about-btn").mouseleave(function(){
+	$(this).removeClass("change").delay(500);
+});
