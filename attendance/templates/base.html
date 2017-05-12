@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 
+
+     <link href="https://fonts.googleapis.com/css?family=Lobster" rel="stylesheet">
     {% load staticfiles %}
     <link href="{% static 'attendance/css/base.css' %}" rel="stylesheet">
     <link rel="stylesheet" href="{% static  'attendance/css/index.css' %}" class="css">
@@ -27,7 +29,7 @@
   <body>
 
     <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
+      <div class="container" id="top">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
             <span class="sr-only">Toggle navigation</span>
@@ -35,31 +37,36 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-           <a class="navbar-brand" href="{% url 'index' %}">Attendance Analyst</a>
+           <a class="navbar-brand" href="{% url 'index' %}" style="font-family: 'lobster', cursive;">Attendance Analyst</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
             <li class="{{ navRegisterClass }}"><a href="{% url 'register' %}#focus">Register</a></li>
-            <li class="{{ navAboutClass }}"><a href="#about">About</a></li>
+            <li class="{{ navAboutClass }}"><a href="{% url 'about' %}#focus">About</a></li>
           </ul>
         </div>
       </div>
     </nav>
 
-        <div class="jumbotron vertical-center parallax-window" data-parallax="scroll"
+    <div class="jumbotron vertical-center parallax-window" data-parallax="scroll"
                 data-image-src="{% static 'attendance/css/jumbotro.jpg' %}" id="main-jumbo">
       <div class="container text-center">
-          <h1>Attendance Analyst</h1>
-        <p>Easy.Comprehensive.Analytic</p>
-        <p>Signup and get easy access to attendance records.<br/> Calculate number of classes need to prevent grade drops and loss of scholarship.</p>
-{#        <p><button class="btn btn-link center-block" href="#focus" role="button" id="about-btn">Go &raquo;</button></p>#}
-          <p><img src="/media/img/arrow-down.png" href="#focus" role="button" id="about-btn" class="img-circle img-thumbnail" style='background-color: #f3f2f4; margin-top: 50px' alt="Go!"></p>
-        </div>
+          <h1 style="font-family: 'lobster', cursive; font-size: 13vh">Attendance Analyst</h1>
+        <p><i>Easy.Comprehensive.Analytic</i></p>
+        <small><p>Signup and get easy access to attendance records.<br/> Calculate number of classes need to prevent grade drops and loss of scholarship.</p>
+        </small>
+            {#        <p><button class="btn btn-link center-block" href="#focus" role="button" id="about-btn">Go &raquo;</button></p>#}
+            <p><img src="/media/img/arrow-down.png" href="#focus" role="button" id="about-btn" class="img-circle img-thumbnail link-btn" style='background-color: #f3f2f4;' alt="Go!"></p>
+      </div>
+
     </div>
 
 
     {% block body %}
     {% endblock %}
+
+{#    <a href="#" class="back-to-top">Back to Top</a>#}
+    <img src="/media/img/arrow-up.png" href="#top" role="button" id="up-btn" class="img-circle img-thumbnail back-to-top link-btn" style='background-color: #f3f2f4; margin-top: 50px' alt="Go!">
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="{% static 'attendance/js/parallax.min.js' %}"></script>
     <script src="{% static 'attendance/js/jquery.easing.js' %}"></script>

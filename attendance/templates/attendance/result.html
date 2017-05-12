@@ -45,7 +45,7 @@
             background-color: rgba(0, 256, 0, 0.3);
         }
     </style>
-        {% load staticfiles %}
+    {% load staticfiles %}
 {% endblock %}
 
 
@@ -54,7 +54,7 @@
         <div class="col-sm-3 col-xs-12">
             <div class="display col-centered pull-right">
             <a class ="normal-anchor2" href="{% url 'records' student_retrieved.lmsId 4 %}#focus">
-            <img class="img-circle" src="{{ student_retrieved.display_image.url }}" alt="Generic placeholder image" width="140" height="140">
+            <img class="img-circle" src="{{ student_retrieved.display_image.url }}" alt="Profile pic" width="140" height="140">
             <h2>{{ student_retrieved.name }}</h2>
             <p>
                 {{ student_retrieved.lmsId }}
@@ -90,7 +90,6 @@
                         {% else %}
                         <button class="btn" onclick="location.href='{% url 'records' student_retrieved.lmsId sem %}#focus'" >{{ sem }}</button>
                         {% endif %}
-
                     {% endif %}
                 {% endfor %}
             </div>

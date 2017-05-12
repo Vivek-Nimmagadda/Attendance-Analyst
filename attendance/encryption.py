@@ -28,8 +28,10 @@ pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
 EncodeAES = lambda c, s: base64.b64encode(c.encrypt(pad(s)))
 DecodeAES = lambda c, e: c.decrypt(base64.b64decode(e)).rstrip(PADDING)
 
+
 # generate a random secret key
 secret = "\xee\x9d\xcfx\xbc\x0b\xb3'\xad\xae\xd3\xfa\xa2;\xd5\x86"
+
 
 # create a cipher object using the random secret
 cipher = AES.new(secret)

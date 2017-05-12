@@ -7,13 +7,31 @@ $(function() {
 		}, 1500, 'easeOutElastic');
 		event.preventDefault();
 	});
+
+	var amountScrolled = 300;
+
+	$(window).scroll(function() {
+		if ( $(window).scrollTop() > amountScrolled ) {
+			$('.back-to-top').fadeIn('fast');
+		} else {
+			$('.back-to-top').fadeOut('fast');
+		}
+	});
+
+	$('#up-btn').click(function() {
+	$('html, body').animate({
+		scrollTop: 0
+	}, 1500, 'easeInOutExpo');
+	return false;
+});
+
 });
 
 
-$("#about-btn").mouseover(function(){
+$(".link-btn").mouseover(function(){
 	$(this).addClass("change").delay(500);
 });
 
-$("#about-btn").mouseleave(function(){
+$(".link-btn").mouseleave(function(){
 	$(this).removeClass("change").delay(500);
 });
