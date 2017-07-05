@@ -21,7 +21,7 @@ class RegisterForm(forms.Form):
                 'user_name',
                 'lms_id',
                 'password',
-                HTML("<p>Profile Picture</p><img id='profile-pic' class='img-circle col-lg-12' src='#' alt='Profile pic not uploaded!'>"),
+                HTML("<p>Profile Picture</p><img id='profile-pic' class='img-circle col-lg-12'>"),
                 'profile_picture',
             ),
             StrictButton('Register', css_class='btn btn-lg btn-primary btn-block', type='submit')
@@ -30,7 +30,7 @@ class RegisterForm(forms.Form):
     user_name = forms.CharField(label="User Name", max_length=50, widget=forms.TextInput(attrs={'placeholder': "User Name", 'class': 'form-control'}))
     lms_id = forms.CharField(label="LMS ID", max_length=50, widget=forms.TextInput(attrs={'placeholder': "LMS ID", 'class': 'form-control', 'id':'lmsid'}))
     password = forms.CharField(label="Password", widget=forms.PasswordInput(attrs={'placeholder': "Password", 'class': 'form-control'}))
-    profile_picture = forms.ImageField()
+    profile_picture = forms.ImageField(required=False)
 
     def clean(self):
         cleaned_data = super(RegisterForm, self).clean()

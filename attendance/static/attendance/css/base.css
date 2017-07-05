@@ -72,8 +72,8 @@ body {
 }
 
 .normal-anchor:hover {
-    background-color: #f1f1f1;
     text-decoration: none;
+    background-color: #f1f1f1;
 }
 
 .normal-anchor:active {

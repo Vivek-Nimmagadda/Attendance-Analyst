@@ -4,7 +4,7 @@ $(function() {
 
 		$('html, body').stop().animate({
 			scrollTop: $($anchor.attr('href')).offset().top-50
-		}, 1500, 'easeOutElastic');
+		}, 2000, 'easeOutElastic');
 		event.preventDefault();
 	});
 
