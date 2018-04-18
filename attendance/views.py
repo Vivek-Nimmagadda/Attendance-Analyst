@@ -10,11 +10,14 @@ import requests
 from .forms import RegisterForm, EditProfile
 import json
 
+
 # Create your views here.
 
 
 def index(request):
     student_list = Student.objects.all().order_by('last_updated').reverse()
+    for student in student_list:
+        print student.name  + " -- " + str(student.cur_sem)
     time_now = timezone.now()
     return render(request, 'attendance/index.html', {'studentList': student_list, 'currentTime': time_now})
 
@@ -45,7 +48,7 @@ def edit(request, lms_id):
 
 
 def about(request):
-    return render(request, 'attendance/about.html', {'navAboutClass':'active'})
+    return render(request, 'attendance/about.html', {'navAboutClass': 'active'})
 
 
 def update_records(request, lms_id):
@@ -111,9 +114,13 @@ def update_records(request, lms_id):
         # Formatting Subjects
         for i in range(len(subjects)):
             sem_subjects += [i]
-            temp = subjects[i].split(':')
             num = -1
-            if "SEM IV" in subjects[i]:
+            if "SEM VI" in subjects[i]:
+                num = 6
+                print "Found 6 sem" + subjects[i]
+            elif "SEM V" in subjects[i]:
+                num = 5
+            elif "SEM IV" in subjects[i]:
                 num = 4
             elif "SEM III" in subjects[i]:
                 num = 3
@@ -125,8 +132,14 @@ def update_records(request, lms_id):
                 num = 1
             elif "Sem I" in subjects[i]:
                 num = 1
+
+            temp = subjects[i].split(':')
             if len(temp) > 1:
-                subjects[i] = temp[2].strip()[:-12]
+                try:
+                    subjects[i] = temp[2].strip()[:-12]
+                except IndexError:
+                    subjects[i] = subjects[i].strip()
+
             else:
                 subjects[i] = temp[0].split('-')[0]
             sub_array.append({'name': subjects[i], 'sem': num})
@@ -135,17 +148,18 @@ def update_records(request, lms_id):
         subjects_array = []
         for subject in sub_array:
             try:
-                test = Subjects.objects.get(name=subject)
+                test = Subjects.objects.get(name=subject['name'])
             except Exception:
                 test = Subjects(name=subject['name'], sem=subject['sem'])
                 test.save()
                 pass
-            k+=1
+            k += 1
             subjects_array.append(test)
 
         # Printing Details
         print '-' * 103
-        print '{0:50}||{1:5}|{2:7}|{3:6}|{4:7}|{5:6}|{6:6}| Set ah? '.format('Course', 'Total', 'Present', 'Absent', '   %',
+        print '{0:50}||{1:5}|{2:7}|{3:6}|{4:7}|{5:6}|{6:6}| Set ah? '.format('Course', 'Total', 'Present', 'Absent',
+                                                                             '   %',
                                                                              'For 80', 'For 75')
         print '-' * 103
 
@@ -173,7 +187,7 @@ def update_records(request, lms_id):
 
             print u'{0:50}||{1:4d} |{2:5d}  |{3:4d}  |{4:6.2f}%|{5:15}'.format(subjects[k], int(total_classes[k]),
                                                                                int(present[k]), int(absent[k]),
-                                                                               float(perc),comment)
+                                                                               float(perc), comment)
 
             try:
                 temp = Attendance.objects.filter(student__lmsId=student.lmsId).get(subject__name=subjects[k])
@@ -187,11 +201,14 @@ def update_records(request, lms_id):
             except Exception:
                 temp = Attendance(student=student, subject=subjects_array[k],
                                   present_class=present[k], absent_class=absent[k], total_class=total_classes[k],
-                                  for75=int(absent[k])*4 - int(total_classes[k]), for80=int(absent[k])*5 - int(total_classes[k]))
+                                  for75=int(absent[k]) * 4 - int(total_classes[k]),
+                                  for80=int(absent[k]) * 5 - int(total_classes[k]))
                 temp.save()
 
         print '-' * 103
         student.last_updated = timezone.now()
+        student.cur_sem = max(list_of_sems(student))
+        print student.name + " --------- " + str(student.cur_sem)
         student.save()
         print student.last_updated
         # Loggin Out
@@ -205,7 +222,8 @@ def update_records(request, lms_id):
             status = 'Logout Failed!'
             print status
         print '-' * 103
-        return redirect('/attendance/' + student.lmsId + "/" + "4" + "/#focus")
+
+        return redirect('/attendance/' + student.lmsId + "/" + str(student.cur_sem) + "/#focus")
     return HttpResponse("Failure!")
 
 
@@ -233,16 +251,16 @@ def get_records(request, lms_id, sem):
             classes80 = "SET"
             comment = "SET"
         elif perc >= 75:
-            classes80 = int(attendance_record.absent_class) * 5 - int(attendance_record.total_class)
+            classes80 = attendance_record.for80
             comment = "uh?"
-            if classes80 >= 0 :
+            if classes80 >= 0:
                 classes80 = classes80
             else:
                 classes80 = "SET!"
             classes75 = "SET!"
         else:
-            classes80 = int(attendance_record.absent_class) * 5 - int(attendance_record.total_class)
-            classes75 = int(attendance_record.absent_class) * 4 - int(attendance_record.total_class)
+            classes80 = attendance_record.for80
+            classes75 = attendance_record.for75
             comment = "Dhadel!"
             if classes80 >= 0:
                 classes80 = classes80
@@ -252,8 +270,10 @@ def get_records(request, lms_id, sem):
                 classes75 = classes75
             else:
                 classes80 = "SET!"
-        table_list_item = {'name': attendance_record.subject.name, 'total': attendance_record.total_class, 'present': attendance_record.present_class,
-                           'absent': attendance_record.absent_class, 'perc': perc, 'comment': comment, 'for80': classes80, 'for75': classes75}
+        table_list_item = {'name': attendance_record.subject.name, 'total': attendance_record.total_class,
+                           'present': attendance_record.present_class,
+                           'absent': attendance_record.absent_class, 'perc': perc, 'comment': comment,
+                           'for80': classes80, 'for75': classes75}
         table_list.append(table_list_item)
         perc = "%.2f" % perc
         percet_list.append(perc)
@@ -269,6 +289,7 @@ def get_records(request, lms_id, sem):
 
     student_retrieved = Student.objects.get(lmsId=lms_id)
     sem_list = list_of_sems(student_retrieved)
+    print sem_list
     sub_list = json.dumps(sub_list)
     context = {'student_retrieved': student_retrieved, 'table_list': table_list,
                'currentTime': timezone.now(), 'semList': sem_list, 'cur_sem': int(sem),
