@@ -1,1 +1,1 @@
-Live track your attendance using Attendance Analyst with just one click.
+Live track your attendance using Attendance Analyst on the go with just a click.
